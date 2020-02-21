@@ -1,0 +1,201 @@
+<section>
+  <form (ngSubmit)="saveChanges(f)" #f="ngForm">
+    <div class="card">
+      <!-- Accordion Items -->
+      <ul
+        class="card-header"
+        (click)="!editing ? (isCollapsed = !isCollapsed) : null"
+      >
+        <li>
+          <button
+            type="button"
+            class="btn fa fa-chevron-right"
+            [ngStyle]="{ transform: isCollapsed ? '' : 'rotate(90deg)' }"
+          ></button>
+        </li>
+
+        <li>{{ savedSearch.datetime_updated | date }}</li>
+        <li>
+          <span
+            *ngIf="!editing; else editName"
+            class="name"
+            role="button"
+            style="color: #292929"
+          >
+            {{ inputName || savedSearch.name }}
+          </span>
+
+          <!-- Edit savedSearch input -->
+          <ng-template #editName>
+            <input
+              [(ngModel)]="form.inputName"
+              #inputName="ngModel"
+              name="inputName"
+              required
+              autocomplete="off"
+              size="42"
+              [ngClass]="f.form.invalid ? 'edit-name-invalid' : 'edit-name'"
+              [ngStyle]="{ background: inputName === '' ? 'red' : '' }"
+              [value]="f.form.invalid ? 'Name is required' : form.inputName"
+            />
+          </ng-template>
+        </li>
+        <li>
+          <span>{{ savedSearch.result_count | number }}</span>
+        </li>
+        <li (click)="loadOverlays()">
+          <button id="button" type="button" class="btn">
+            LOAD
+          </button>
+        </li>
+      </ul>
+
+      <!-- Accordion Hidden Content Starts Here -->
+      <div [collapse]="isCollapsed" [isAnimated]="true">
+        <!-- Overlay Colors -->
+        <div class="row overlays">
+          <span
+            *ngFor="let color of overlayColors"
+            [ngStyle]="{
+              display: 'inline-block',
+              background: color.color,
+              width: '80px',
+              height: '7px',
+              'margin-right': '.063em',
+              'border-radius': '0px 0px 11px 11px'
+            }"
+          >
+            <a>&nbsp;&nbsp;</a>
+          </span>
+        </div>
+
+        <!-- Content -->
+        <div
+          [ngClass]="{ 'card-body': !editing, 'card-body-edit-mode': editing }"
+        >
+          <div class="description-container" *ngIf="isDetailsCollapsed">
+            <!-- Notifications -->
+            <nav class="user-nav">
+              <input
+                #inputNotifications="ngModel"
+                [id]="this.savedSearch.name"
+                [(ngModel)]="form.inputNotifications"
+                name="inputNotifications"
+                autocomplete="off"
+                type="checkbox"
+                [checked]="inputNotifications"
+                (change)="saveChanges()"
+              />
+              <label
+                [for]="this.savedSearch.name"
+                style="margin-left: 0.5rem;
+                color: #000"
+              >
+                <small>Receive notifications</small>
+              </label>
+            </nav>
+
+            <!-- Description View -->
+            <h5 class="desc_subtitle">Description:</h5>
+            <div class="description">
+              <ng-template #Description>
+                <div
+                  class="description"
+                  innerHTML="{{
+                    form.inputDescription | highlight: searchText
+                  }}"
+                ></div>
+              </ng-template>
+
+              <!-- Description Editing -->
+              <div *ngIf="editing; else Description" (keyup)="(countChars)">
+                <textarea
+                  #textArea="ngModel"
+                  [(ngModel)]="form.inputDescription"
+                  name="inputDescription"
+                  [rows]="
+                    savedSearch.description &&
+                    savedSearch.description.length < 200
+                      ? 5
+                      : savedSearch.description.length > 200 &&
+                        savedSearch.description.length < 499
+                      ? 6
+                      : savedSearch.description.length > 500
+                      ? 9
+                      : 5
+                  "
+                  cols="96"
+                  class="textarea-edit"
+                  style="overflow-y: 'scroll'"
+                >
+{{ form.inputDescription }]</textarea
+                >
+              </div>
+            </div>
+
+            <!-- EditMode Buttons -->
+            <footer class="edit-mode-footer">
+              <button
+                class="btn btn-secondary btn-xs"
+                type="button"
+                *ngIf="!editing"
+                (click)="toggleEditing()"
+              >
+                <i class="fa fa-edit" (click)="toggleEditing()"></i>
+                EDIT
+              </button>
+
+              <button
+                *ngIf="editing"
+                class="btn btn-success btn-xs"
+                type="submit"
+                [disabled]="f.form.invalid"
+              >
+                <i class="fa fa-save"></i>
+                SAVE CHANGES
+              </button>
+              &nbsp;
+              <button
+                *ngIf="editing"
+                (click)="this.disableEditing()"
+                class="btn btn-primary btn-xs"
+                type="button"
+              >
+                <i class="fa fa-close"></i> CANCEL
+              </button>
+              <button
+                (click)="delete()"
+                class="btn btn-danger btn-xs
+                  pull-right float-right"
+                type="button"
+              >
+                <i class="fa fa-trash"></i> DELETE
+              </button>
+            </footer>
+          </div>
+
+          <!-- Details Sumamry -->
+          <div [ngStyle]="{ margin: 'auto', 'text-align': 'center' }">
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              [ngStyle]="{
+                'border-radius': '4px 4px 0px 0px',
+                'font-size': '0.75rem'
+              }"
+              (click)="isDetailsCollapsed = !isDetailsCollapsed"
+            >
+              Details Summary
+            </button>
+          </div>
+        </div>
+        <app-details-summary
+          [collapse]="isDetailsCollapsed"
+          [isAnimated]="true"
+          [isDetailsCollapsed]="isDetailsCollapsed"
+          [savedSearch]="savedSearch"
+        ></app-details-summary>
+      </div>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,15 @@
+<div>
+  <app-search-form
+    #searchForm
+    [searchText]="searchText"
+    [savedSearchCount]="savedSearchCount"
+    [savedSearches]="savedSearches"
+    (expandAll)="expandAll()"
+    (collapseAll)="collapseAll()"
+    (localRefresh)="localRefresh()"
+    (updateCheckbox)="updateCheckbox($event)"
+    (refreshAll)="refreshEventC($event)"
+    style="position: relative; top: 0; left: 0; z-index: 1200;"
+  >
+  </app-search-form>
+</div>

@@ -1,0 +1,25 @@
+<div id="innerMap" class="adrCenter overflow-hidden">
+  <div>
+    <div id="adrRow">
+      <div id="adrColLeft" class="adrCol scrollbar col-2">
+        <app-layers
+          *ngIf="router.url.includes('layers')"
+          queryParamsHandling="preserve"
+        ></app-layers>
+        <app-investment
+          *ngIf="router.url.includes('investment')"
+          queryParamsHandling="preserve"
+        ></app-investment>
+      </div>
+      <div id="adrColCenter" class="adrCol">
+        <div
+          #innerMapContainer
+          [id]="mapid"
+          class="active"
+          style="width: 100%; height: 380px;"
+        ></div>
+      </div>
+      <div id="adrColRight" class="adrCol scrollbar"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,163 @@
+<button
+  class="btn btn-primary btn-sm"
+  data-toggle="modal"
+  data-target=".bd-example-modal-lg"
+  style="position: relative; z-index: 500; top: 10px; left: 10px;"
+>
+  Open Saved Searches
+</button>
+
+<div
+  class="modal fade bd-example-modal-lg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myLargeModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>
+          Saved Searches &nbsp;<span
+            [ngStyle]="{ 'font-size': '1rem' }"
+            class="badge badge-primary"
+            >{{ savedSearchCount }}</span
+          >
+        </h5>
+
+        <button type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div
+          *ngIf="!savedSearchCount"
+          [ngStyle]="{ 'text-align': 'center' }"
+          class="m-5"
+        >
+          <div>
+            <div class="spinner-border text-info" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="text-info">loading...</div>
+          </div>
+        </div>
+
+        <!-- Empty Saved Searches Message -->
+        <div
+          *ngIf="savedSearchCount < 1"
+          class="alert alert-danger"
+          role="alert"
+        >
+          <h4>
+            <i class="fa fa-info-circle"></i>&nbsp;In order to view saved
+            searches you must first save a search
+          </h4>
+        </div>
+
+        <div *ngIf="savedSearchCount > 0">
+          <!-- Search Filter -->
+          <div class="form-group search" [ngStyle]="{ 'margin-bottom': '0px' }">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span
+                  class="input-group-text"
+                  id="basic-addon-filter"
+                  [ngStyle]="{
+                    'padding-left': '10px',
+                    'border-radius': '0',
+                    width: '54px'
+                  }"
+                >
+                  <i class="fa fa-filter"></i>
+                </span>
+              </div>
+              <input
+                [(ngModel)]="searchText"
+                name="searchText"
+                autocomplete="off"
+                type="text"
+                class="form-control search"
+                placeholder="Type here to filter saved searches"
+                aria-label="SearchText"
+                aria-describedby="basic-addon-searchText"
+                [ngStyle]="{
+                  'border-radius': '0',
+                  'border-right': 'none',
+                  'border-top': 'solid thin #e8e8e8'
+                }"
+              />
+              <div class="input-group-append">
+                <span
+                  (click)="clearSearchText()"
+                  class="input-group-text btn
+                  btn-outline-primary"
+                  id="basic-addon-clear"
+                  [ngStyle]="{
+                    'font-size': '1em',
+                    'font-family': 'Arial',
+                    'border-radius': '0',
+                    cursor: 'pointer',
+                    width: 'auto',
+                    padding: '0px 10px'
+                  }"
+                >
+                  Clear
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accordion Data Labels -->
+          <ul class="table-header">
+            <li class="expand-icon" *ngIf="!isExpand" (click)="expand()">
+              <span class="fa fa-plus-square fa-lg"></span>
+            </li>
+            <li class="expand-icon" *ngIf="isExpand" (click)="collapse()">
+              <span class="fa fa-minus-square fa-lg"></span>
+            </li>
+            <li class="data">Last Edited</li>
+            <li class="name">Name</li>
+            <li class="results"># of Results</li>
+            <li>&nbsp;</li>
+          </ul>
+        </div>
+
+        <!-- App-Accordion -->
+        <div class="accordion-container">
+          <app-accordion
+            #accordion
+            *ngFor="
+              let item of savedSearches
+                | filterby: searchText
+                | sortByFilter: 'datetime_updated'
+            "
+            [id]="item.id"
+            [searchText]="searchText"
+            (closeModal)="closeModal()"
+            (refresh)="refresh()"
+            (refreshEvent)="refreshFromComponent(savedSearches)"
+            (localRefresh)="localRefreshEvent()"
+            (submitCheckboxEvent)="submitFromCheckboxComponent($event)"
+            [collapseAll]="collapseAll"
+            [expandAll]="expandAll"
+            [savedSearch]="item"
+          >
+          </app-accordion>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button (click)="this.refresh()" class="btn btn-outline-secondary">
+          <i class="fa fa-refresh fa-lg"></i>&nbsp;Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-map
+  style="position: relative; z-index: -100; top: -30px; left: 0;"
+></app-map>
