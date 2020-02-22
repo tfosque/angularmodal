@@ -74,7 +74,7 @@ export class AccordionComponent implements OnInit {
 
   // NEW:
   saveChanges() {
-    this.disableEditing();
+    // this.disableEditing();
     const query = {
       name: this.form.inputName,
       enable_notifications: this.form.inputNotifications,
@@ -146,6 +146,5 @@ export class AccordionComponent implements OnInit {
 
   localRefreshEvent() {
     this.localRefresh.emit();
-
   }
 }

@@ -25,9 +25,11 @@ export class AppComponent implements OnInit {
 
     _.isEmpty(localdb)
       ? this.api.getApiData().subscribe(res => {
-        console.log({ res });
+        // console.log({ res });
         this.api.udpdateLocalStorage(res);
-        this.getLocalData();
+        /*  setTimeout(() => {
+           this.api.getLocalStorage();
+         }, 500); */
       })
       : ((this.savedSearches = localdb),
         (this.savedSearchCount = localdb.length));
@@ -73,12 +75,12 @@ export class AppComponent implements OnInit {
     const id = event.id;
     const timeStamp = this.toISO(Date.now());
 
-    console.log({ timeStamp });
+    // console.log({ timeStamp });
 
     newData.map(item => {
       if (item.id === id) {
-        console.log({ item });
-        console.log({ event });
+        /*  console.log({ item });
+         console.log({ event }); */
         return (
           (item.name = event.name),
           (item.enable_notifications = event.enable_notifications),

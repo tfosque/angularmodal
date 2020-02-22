@@ -52,7 +52,7 @@ export class InnerMapComponent implements OnInit, AfterViewInit {
     const innerMarker = L.marker(innerMap.getCenter(), {
       draggable: true,
       icon: L.icon({
-        iconUrl: '/assets/img/pin-4ldpi.png',
+        iconUrl: 'assets/img/pin-4ldpi.png',
         iconSize: [30, 35],
         iconAnchor: [30 / 2, 35],
       })

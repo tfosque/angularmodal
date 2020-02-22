@@ -23,21 +23,15 @@ export class CrudStorageService {
   // Local Storage
   getLocalStorage() {
     // return this.http.get<any[]>(this.api);
-    // convert any invalid dates to ISO date format
-    // let db = this.data.getSearches().slice(0, 33);
-    /* db = db.map(m => {
-      return {
-        ...m,
-        datetime_updated: this.toISO(m.datetime_updated, m.id)
-      };
-    }); */
-
     let db = JSON.parse(localStorage.getItem("savedSearches"));
     return db;
   }
 
   udpdateLocalStorage(newData: any) {
     localStorage.setItem("savedSearches", JSON.stringify(newData));
+    setTimeout(() => {
+      this.getLocalStorage();
+    }, 500);
   }
 
   deleteLocalData(id: number) {
@@ -64,9 +58,9 @@ export class CrudStorageService {
     return newDateIso;
   }
 
-  getLatestFromStorage() {
+  /* getLatestFromStorage() {
     return JSON.parse(localStorage.getItem("savedSearches"));
-  }
+  } */
 }
 
 
